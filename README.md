@@ -1,4 +1,4 @@
-# Floating Label Edit Text Pattern for Android
+# Material Floating Label
 
 Floating Label according to Material Design spec.
 
@@ -58,11 +58,11 @@ Your "input unit" layout may look like this (using `appcompat-v7` library):
 
 ## Customization
 
-### All floating label widgets
-
 All floating labels extend `TextView` so all its attributes are applicable as well.
 
 All custom attributes may be accessed via getters and setters.
+
+### All floating label widgets
 
 These custom attributes may be used with all floating label widgets:
 
@@ -71,7 +71,7 @@ These custom attributes may be used with all floating label widgets:
 Trigger determines when the label shows.
 - `focus` means it will show on enter and hide on leave with no text entered.
 - `text` means it will show when there's a text in the owner view. If the owner view is not a
-`TextView` or it's descendant it will behave as `manual`.
+ `TextView` or it's descendant it will behave as `manual`.
 - `manual` means you have complete control over showing and hiding the label.
 
     <item name="flv_colorDefault">?android:textColorSecondary</item>
@@ -96,7 +96,7 @@ Owner view position determines where the owner view lies in relation to the labe
 Valid values are `top`, `left`, `right` and `bottom`.
 These are used when animating showing and hiding of the label.
 
-### `FloatingLabelView`
+### FloatingLabelView
 
 The `FloatingLabelView` can be customized using the following attributes:
 
@@ -105,7 +105,7 @@ The `FloatingLabelView` can be customized using the following attributes:
 Activated color determines the label text color when the owner view has focus.
 Typically this is the accent color.
 
-### `FloatingHelperView`
+### FloatingHelperView
 
 Floating helper may or may not be displayed typically below the owner view.
 It has an optional error state which is always triggered manually and cleared on text change
@@ -126,7 +126,7 @@ May be colored by error color.
 
 If true the owner view background becomes colored with error color when in error state.
 
-### `CharacterCounterView` extends `FloatingHelperView`
+### CharacterCounterView extends FloatingHelperView
 
 The character counter must be used in conjunction with a `TextView` descendant.
 
@@ -142,6 +142,21 @@ via corresponding attribute in your theme definition:
     <item name="floatingLabelViewStyle">...</item>
     <item name="floatingHelperViewStyle">...</item>
     <item name="characterCounterViewStyle">...</item>
+
+The style will look similar to this:
+
+    <style name="Widget.FloatingLabelView" parent="">
+        <item name="android:textAppearance">@style/TextAppearance.FloatingLabelView</item>
+        <item name="android:minHeight">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="flv_trigger">focus</item>
+        <item name="flv_colorDefault">?android:textColorSecondary</item>
+        <item name="flv_colorActivated">?android:textColorPrimary</item>
+        <item name="flv_colorError">@color/flv_error</item>
+        <item name="flv_ownerViewBackgroundError">@null</item>
+        <item name="flv_ownerViewUseColorError">true</item>
+        <item name="flv_ownerViewPosition">bottom</item>
+    </style>
 
 ## Changelog
 
@@ -170,6 +185,10 @@ upon focus listeners:
 states. It is to be determined if this is really necessary.
 
 ## Credit
+
+This project started as a fork of MrEngineer/FloatingLabelLayout with the intention of adding helper
+support. During development I decided to change approach and structure and not to pollute the
+original solution by these changes. Credit for the project therefore goes to these people as well:
 
 1. [Matt Smith](http://mattdsmith.com/float-label-pattern/) and [Google](http://www.google.com/design/spec/components/text-fields.html#text-fields-floating-labels) for the idea
 2. [Chris Banes](https://gist.github.com/chrisbanes/11247418) for his implementation
