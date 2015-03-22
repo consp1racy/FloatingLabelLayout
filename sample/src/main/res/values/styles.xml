@@ -1,14 +1,16 @@
 <resources>
 
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#1976d2</item>
+        <item name="colorPrimaryDark">#1565c0</item>
+        <item name="colorAccent">#0d47a1</item>
+
+        <item name="floatingLabelViewStyle">@style/Widget.AppTheme.FloatingLabelView</item>
     </style>
 
-    <style name="TextAppearance.FLL.FloatLabel.Blue" parent="android:TextAppearance.Small">
-        <item name="android:textColor">@drawable/blue_float_label</item>
-        <item name="android:textSize">11sp</item>
-        <item name="android:textStyle">bold</item>
+    <style name="Widget.AppTheme.FloatingLabelView" parent="Widget.FloatingLabelView">
+        <item name="flv_colorActivated">?colorControlActivated</item>
+        <item name="flv_colorDefault">?colorControlNormal</item>
     </style>
 
 </resources>

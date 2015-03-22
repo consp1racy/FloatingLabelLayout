@@ -1,28 +1,31 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.hugo'
 
 android {
-    compileSdkVersion 20
-    buildToolsVersion '20.0.0'
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
 
     defaultConfig {
-        applicationId "com.mrengineer13.fll"
-        minSdkVersion 9
-        targetSdkVersion 20
+        minSdkVersion 4
+        targetSdkVersion 22
         versionCode 1
-        versionName "0.1"
+        versionName "1.0"
     }
     buildTypes {
         release {
-            runProguard true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            runProguard true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    publishNonDefault true
+    defaultPublishConfig "release"
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:support-annotations:22.0.0'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
 }

@@ -18,13 +18,43 @@
 
 <resources>
 
-    <declare-styleable name="FloatingLabelLayout">
-        <attr name="floatLabelTextAppearance" format="reference" />
-        <attr name="floatLabelTrigger" format="enum">
-            <enum name="text" value="0" />
-            <enum name="focus" value="1" />
-        </attr>
-        <attr name="floatLabelSidePadding" format="reference|dimension" />
+    <declare-styleable name="FloatingLabelTheme">
+        <attr name="floatingLabelViewStyle" format="reference"/>
+        <attr name="floatingHelperViewStyle" format="reference"/>
+        <attr name="characterCounterViewStyle" format="reference"/>
     </declare-styleable>
 
+    <declare-styleable name="FloatingLabelView">
+        <!-- character limit for counter -->
+        <attr name="flv_characterLimit" format="integer|reference"/>
+        <!-- default hint or helper text -->
+        <attr name="flv_textDefault" format="string|reference"/>
+        <!-- error text -->
+        <attr name="flv_textError" format="string|reference"/>
+        <!-- listen to and handle this view -->
+        <attr name="flv_ownerView" format="reference"/>
+        <!-- color for text and optionally view background on error -->
+        <attr name="flv_colorError" format="color|reference"/>
+        <!-- default text color -->
+        <attr name="flv_colorDefault" format="color|reference"/>
+        <!-- activated text color -->
+        <attr name="flv_colorActivated" format="color|reference"/>
+        <!-- custom background for view on error -->
+        <attr name="flv_ownerViewBackgroundError" format="reference"/>
+        <!-- should view abckground be colored on error -->
+        <attr name="flv_ownerViewUseColorError" format="boolean"/>
+        <!-- when the label shows -->
+        <attr name="flv_trigger" format="enum">
+            <enum name="manual" value="0"/>
+            <enum name="focus" value="1"/>
+            <enum name="text" value="2"/>
+        </attr>
+        <attr name="flv_ownerViewPosition" format="enum">
+            <enum name="undefined" value="0"/>
+            <enum name="left" value="1"/>
+            <enum name="top" value="2"/>
+            <enum name="right" value="3"/>
+            <enum name="bottom" value="4"/>
+        </attr>
+    </declare-styleable>
 </resources>

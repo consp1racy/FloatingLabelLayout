@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <net.xpece.material.floatinglabel.FloatingLabelView
+                android:paddingLeft="@dimen/abc_control_inset_material"
+                android:paddingRight="@dimen/abc_control_inset_material"
+                app:flv_textDefault="@string/account_username_hint"
+                app:flv_ownerView="@+id/et_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/et_username"
+                android:hint="@string/account_username_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <net.xpece.material.floatinglabel.CharacterCounterView
+                android:paddingLeft="@dimen/abc_control_inset_material"
+                android:paddingRight="@dimen/abc_control_inset_material"
+                app:flv_ownerView="@+id/et_username"
+                app:flv_characterLimit="10"
+                app:flv_trigger="focus"
+                android:layout_gravity="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <net.xpece.material.floatinglabel.FloatingLabelView
+                android:paddingLeft="@dimen/abc_control_inset_material"
+                android:paddingRight="@dimen/abc_control_inset_material"
+                app:flv_textDefault="@string/account_password_hint"
+                app:flv_ownerView="@+id/et_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:id="@+id/et_password"
+                android:inputType="textPassword"
+                android:hint="@string/account_password_hint"
+                android:minEms="10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <net.xpece.material.floatinglabel.FloatingHelperView
+                android:id="@+id/helper_password"
+                android:paddingLeft="@dimen/abc_control_inset_material"
+                android:paddingRight="@dimen/abc_control_inset_material"
+                app:flv_textDefault="Enter your password"
+                app:flv_textError="The password is wrong. Try again."
+                app:flv_ownerView="@id/et_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/check_password"
+            android:text="@string/check"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_marginRight="4dp"
+                android:layout_marginLeft="4dp"
+                android:id="@+id/et_inline"
+                android:hint="@string/inline"
+                android:singleLine="true"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+
+            <net.xpece.material.floatinglabel.CharacterCounterView
+                android:layout_marginRight="4dp"
+                android:layout_marginEnd="4dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:minWidth="88dp"
+                app:flv_ownerView="@id/et_inline"
+                app:flv_characterLimit="10"
+                app:flv_ownerViewPosition="undefined"
+                style="@style/Widget.FloatingLabelView.CharacterCounter.Inline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

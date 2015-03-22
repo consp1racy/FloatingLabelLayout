@@ -1,58 +1,192 @@
 # Floating Label Edit Text Pattern for Android
 
-# Features
+Floating Label according to Material Design spec.
 
-1. Ability to edit EditText/FloatingLabelLayout in the layout
-2. Can handle orientation changes
-3. Customize view styling 
-4. Two triggers, one based on focus and the other based on the input
-5. Backwards compatible to 2.3.x
+Contains floating label, floating helper/error and floating character counter widgets
+for use mainly with `EditText` but capable of handling any other view.
 
-![Float label design pattern](http://dribbble.s3.amazonaws.com/users/6410/screenshots/1254439/form-animation-_gif_.gif)
-  
+The library is now available from API 4.
 
-# Usage
-1. Add *floatinglabel* module as a dependency to your project
+## How to get the library?
 
-2a. Either add the following to your xml:
+To use this library add the following to your module's `build.gradle`:
+```groovy
+dependencies {
+    compile 'net.xpece.material:floating-label:0.2.0'
+}
+```
 
-        <com.mrengineer13.fll.FloatingLabelEditText
-            xmlns:fll="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/fll_username"
+## Usage
+
+Your "input unit" layout may look like this (using `appcompat-v7` library):
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            fll:floatLabelTrigger="text"
-            fll:floatLabelTextAppearance="@style/TextAppearance.FLL.FloatLabel">
-    
+            android:layout_height="wrap_content">
+
+            <net.xpece.material.floatinglabel.FloatingLabelView
+                android:paddingLeft="@dimen/abc_control_inset_material"
+                android:paddingRight="@dimen/abc_control_inset_material"
+                app:flv_textDefault="Password"
+                app:flv_ownerView="@+id/et_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
             <EditText
-                android:id="@+id/edit_username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/account_username_hint"
-                android:singleLine="true"
-                android:inputType="textNoSuggestions"
-                android:imeOptions="actionNext"
-                android:nextFocusDown="@+id/edit_password" />
-    
-        </com.mrengineer13.fll.FloatingLabelEditText>
-        
-2b. or if you want to create one programmatically then use
+                android:id="@+id/et_password"
+                android:inputType="textPassword"
+                android:hint="Password"
+                android:minEms="10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-     FloatingLabelEditText floatingLabelEditText = new FloatingLabelEditText(Activity.this);
-        
+            <net.xpece.material.floatinglabel.FloatingHelperView
+                android:id="@+id/helper_password"
+                android:paddingLeft="@dimen/abc_control_inset_material"
+                android:paddingRight="@dimen/abc_control_inset_material"
+                app:flv_textDefault="Enter your password"
+                app:flv_textError="The password is wrong. Try again."
+                app:flv_ownerView="@id/et_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
-# Known Bugs
+## Customization
 
-## 1. onFocusChangeListener bug
+### All floating label widgets
 
-As of v0.1 this library uses onFocusChangeListener so @Overriding it for the EditText will not work. Try add a [TextWatcher](http://developer.android.com/reference/android/text/TextWatcher.html) instead.
+All floating labels extend `TextView` so all its attributes are applicable as well.
 
-# Credit:
+All custom attributes may be accessed via getters and setters.
 
-1. [Matt Smith](http://mattdsmith.com/float-label-pattern/)  and [Google](http://www.google.com/design/spec/components/text-fields.html#text-fields-floating-labels) for the idea
+These custom attributes may be used with all floating label widgets:
+
+    <item name="flv_trigger">focus</item>
+
+Trigger determines when the label shows.
+- `focus` means it will show on enter and hide on leave with no text entered.
+- `text` means it will show when there's a text in the owner view. If the owner view is not a
+`TextView` or it's descendant it will behave as `manual`.
+- `manual` means you have complete control over showing and hiding the label.
+
+    <item name="flv_colorDefault">?android:textColorSecondary</item>
+
+Default color determines the label text color when the owner view has no focus.
+Typically this is the secondary text color.
+
+    <item name="flv_textDefault">@android:string/untitled</item>
+
+The default text value specifies text to be used in default state (for label it's always).
+Please note that this value is completely independent of any `EditText`'s hint.
+
+    <item name="flv_ownerView">@android:id/text1</item>
+
+The owner view attribute allows you to specify the owner view in a XML layout.
+Typically the owner view is an `EditText` or a `Spinner`. It owns the label/helper.
+
+    <item name="flv_ownerViewPosition">bottom</item>
+
+Owner view position determines where the owner view lies in relation to the label.
+`bottom` signifies the owner view lies below the label.
+Valid values are `top`, `left`, `right` and `bottom`.
+These are used when animating showing and hiding of the label.
+
+### `FloatingLabelView`
+
+The `FloatingLabelView` can be customized using the following attributes:
+
+    <item name="flv_colorActivated">?android:textColorPrimary</item>
+
+Activated color determines the label text color when the owner view has focus.
+Typically this is the accent color.
+
+### `FloatingHelperView`
+
+Floating helper may or may not be displayed typically below the owner view.
+It has an optional error state which is always triggered manually and cleared on text change
+(if applicable).
+
+    <item name="flv_colorError">@color/flv_error</item>
+
+Error color determines text color when the helper is in error state.
+Optionally it may color the owner view background.
+
+    <item name="flv_ownerViewBackgroundError">@null</item>
+
+Specifies custom background for owner view when in error state.
+If no value is specified owner view's original background is used.
+May be colored by error color.
+
+    <item name="flv_ownerViewUseColorError">true</item>
+
+If true the owner view background becomes colored with error color when in error state.
+
+### `CharacterCounterView` extends `FloatingHelperView`
+
+The character counter must be used in conjunction with a `TextView` descendant.
+
+    <item name="flv_characterLimit">10</item>
+
+Character limit signifies when the counter text color turns negative.
+
+### Default themes
+
+You may specify a custom default style for all of these widgets
+via corresponding attribute in your theme definition:
+
+    <item name="floatingLabelViewStyle">...</item>
+    <item name="floatingHelperViewStyle">...</item>
+    <item name="characterCounterViewStyle">...</item>
+
+## Changelog
+
+**0.2.0**
+- First release
+- Completely new modular approach
+- *NEW!* Error state
+- *NEW!* Character counter
+- *FIXED:* Activated color
+
+## Known Issues
+
+### 1. Single onFocusChangeListener
+
+An Android view supports only one `OnFocusChangeListener` attached to it. To work around this I've
+created the `OnFocusListenerWrapper` class, which allows you to attach multiple focus listeners to a
+view. If you plan using focus listeners yourself, you'll need these, as this library relies heavily
+upon focus listeners:
+
+    OnFocusChangeListenerWrapper.add(view, listener);
+    OnFocusChangeListenerWrapper.remove(view, listener);
+
+### 2. Text animations
+
+`FloatingHelperView` does not animate text and text color transitions between default and error
+states. It is to be determined if this is really necessary.
+
+## Credit
+
+1. [Matt Smith](http://mattdsmith.com/float-label-pattern/) and [Google](http://www.google.com/design/spec/components/text-fields.html#text-fields-floating-labels) for the idea
 2. [Chris Banes](https://gist.github.com/chrisbanes/11247418) for his implementation
+3. [MrEngineer](https://github.com/MrEngineer13) for a place to start
 
-<!-- ## Developers-->
+## License
 
-<!-- 1. [MrEngineer](https://github.com/MrEngineer13) -->
+```
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
