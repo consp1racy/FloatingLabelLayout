@@ -27,8 +27,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-import hugo.weaving.DebugLog;
-
 public class FloatingLabelView extends AbstractFloatingLabelView {
 
     private static final String SAVED_SUPER_STATE = "SAVED_SUPER_STATE";
@@ -79,7 +77,6 @@ public class FloatingLabelView extends AbstractFloatingLabelView {
     }
 
     @Override
-    @DebugLog
     public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
@@ -95,7 +92,6 @@ public class FloatingLabelView extends AbstractFloatingLabelView {
     }
 
     @Override
-    @DebugLog
     protected void onReleaseOwnerView() {
         super.onReleaseOwnerView();
         TextView tv = getTextView();

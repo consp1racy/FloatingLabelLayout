@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.jakewharton.hugo'
+//apply plugin: 'com.jakewharton.hugo'
 
 android {
     compileSdkVersion 22
@@ -29,3 +29,11 @@ dependencies {
     compile 'com.android.support:support-annotations:22.0.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
 }
+
+ext {
+    PUBLISH_GROUP_ID = 'net.xpece.material'
+    PUBLISH_ARTIFACT_ID = 'floating-label'
+    PUBLISH_VERSION = '0.2.0'
+}
+
+apply from: '../android-release-aar.gradle'

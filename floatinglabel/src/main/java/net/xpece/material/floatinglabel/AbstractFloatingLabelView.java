@@ -26,8 +26,6 @@ import net.xpece.material.floatinglabel.internal.OnFocusChangeListenerWrapper;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import hugo.weaving.DebugLog;
-
 /**
  * Created by Eugen on 18. 3. 2015.
  */
@@ -122,7 +120,6 @@ abstract class AbstractFloatingLabelView extends TextView {
         init(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    @DebugLog
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 
         mWasSupposedToBeVisible = getVisibility() == VISIBLE;
@@ -207,7 +204,6 @@ abstract class AbstractFloatingLabelView extends TextView {
     }
 
     @Override
-    @DebugLog
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
@@ -288,7 +284,6 @@ abstract class AbstractFloatingLabelView extends TextView {
         return mColorDefault;
     }
 
-    @DebugLog
     public void show() {
         if (getVisibility() == VISIBLE) return;
 
@@ -321,7 +316,6 @@ abstract class AbstractFloatingLabelView extends TextView {
             .setListener(null).start();
     }
 
-    @DebugLog
     public void hide() {
         if (getVisibility() != VISIBLE) return;
 
@@ -361,7 +355,6 @@ abstract class AbstractFloatingLabelView extends TextView {
             }).start();
     }
 
-    @DebugLog
     protected void releaseOwnerView() {
         if (mOwnerView != null) {
             OnFocusChangeListenerWrapper.remove(mOwnerView, mOnFocusChangeListener);
@@ -372,7 +365,6 @@ abstract class AbstractFloatingLabelView extends TextView {
         }
     }
 
-    @DebugLog
     protected void setupOwnerView() {
         if (mOwnerView != null) {
             OnFocusChangeListenerWrapper.add(mOwnerView, mOnFocusChangeListener);

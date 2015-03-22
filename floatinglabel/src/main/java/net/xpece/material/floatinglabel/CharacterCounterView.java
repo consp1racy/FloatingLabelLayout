@@ -9,8 +9,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import hugo.weaving.DebugLog;
-
 /**
  * Created by Eugen on 16. 3. 2015.
  */
@@ -111,7 +109,6 @@ public class CharacterCounterView extends FloatingHelperView {
     }
 
     @Override
-    @DebugLog
     protected void onOwnerViewTextChanged(int oldLen, CharSequence s) {
         int len = s.length();
         int limit = getCharacterLimit();
@@ -129,7 +126,6 @@ public class CharacterCounterView extends FloatingHelperView {
     }
 
     @Override
-    @DebugLog
     protected void onOwnerViewFocusChanged(boolean focused) {
         if (getTrigger() != Trigger.FOCUS) return;
 
