@@ -283,10 +283,11 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
         View ownerView = getOwnerView();
         if (ownerView == null) return;
 
-        if (mBackgroundOriginal != null) {
+        // original background may have been null in the first place
+//        if (mBackgroundOriginal != null) {
             Utils.setBackground(ownerView, mBackgroundOriginal);
             mBackgroundOriginal = null;
-        }
+//        }
     }
 
     private void overrideOwnerViewColors() {
