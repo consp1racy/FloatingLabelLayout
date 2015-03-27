@@ -19,6 +19,7 @@
             android:paddingBottom="8dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
+            android:background="@drawable/divider_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -54,6 +55,7 @@
             android:paddingBottom="8dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
+            android:background="@drawable/divider_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -82,21 +84,21 @@
                 app:flv_ownerView="@id/et_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
-        </LinearLayout>
 
-        <Button
-            android:id="@+id/check_password"
-            android:text="@string/check"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/check_password"
+                android:text="@string/check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:background="@drawable/divider_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -123,6 +125,50 @@
                 style="@style/Widget.FloatingLabelView.CharacterCounter.Inline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:background="@drawable/divider_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <net.xpece.material.floatinglabel.FloatingLabelView
+                android:paddingLeft="@dimen/abc_control_inset_material"
+                android:paddingRight="@dimen/abc_control_inset_material"
+                app:flv_textDefault="@string/month"
+                app:flv_ownerView="@+id/sp_month"
+                app:flv_trigger="manual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Spinner
+                android:id="@+id/sp_month"
+                style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <net.xpece.material.floatinglabel.FloatingHelperView
+                android:id="@+id/helper_month"
+                android:paddingLeft="@dimen/abc_control_inset_material"
+                android:paddingRight="@dimen/abc_control_inset_material"
+                app:flv_textDefault="YYYY-MM-DD"
+                app:flv_textError="YYY-MM-DD"
+                app:flv_ownerView="@id/sp_month"
+                style="@style/Widget.FloatingLabelView.Helper.Custom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <Button
+                android:id="@+id/check_month"
+                android:text="@string/check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
         </LinearLayout>
 
     </LinearLayout>
