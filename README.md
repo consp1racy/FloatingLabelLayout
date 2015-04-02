@@ -5,16 +5,18 @@ Floating Label according to Material Design spec.
 Contains floating label, floating helper/error and floating character counter widgets
 for use mainly with `EditText` but capable of handling any other view.
 
-The library is now available from API 4.
+The library is now available from ~~API 4~~ API 7 (because it's easier to debug / because Hugo is supported from API 7).
 
 ## How to get the library?
 
 To use this library add the following to your module's `build.gradle`:
 ```groovy
 dependencies {
-    compile 'net.xpece.material:floating-label:0.2.0'
+    compile 'net.xpece.material:floating-label:0.2.1'
 }
 ```
+
+The library depends on NineOldAndroids.
 
 ## Usage
 
@@ -159,6 +161,11 @@ The style will look similar to this:
     </style>
 
 ## Changelog
+
+**0.2.1**
+- *FIXED:* Correct text and drawable state after OC (orientation change)
+- *FIXED:* Label shows properly after OC on non-empty TextViews
+- Helper now remains in error state after OC
 
 **0.2.0**
 - First release
