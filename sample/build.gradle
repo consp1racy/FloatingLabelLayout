@@ -17,15 +17,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_7
-    targetCompatibility JavaVersion.VERSION_1_7
-  }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
 }
 
 dependencies {
-  debugCompile project(path: ':floatinglabel', configuration: 'debug')
-  releaseCompile project(path: ':floatinglabel', configuration: 'release')
-  compile 'com.android.support:appcompat-v7:22.0.0'
+    debugCompile project(path: ':floatinglabel', configuration: 'debug')
+    releaseCompile project(path: ':floatinglabel', configuration: 'release')
+    compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.jakewharton.timber:timber:2.7.1'
 }

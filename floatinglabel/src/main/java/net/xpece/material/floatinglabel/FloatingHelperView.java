@@ -11,34 +11,31 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import net.xpece.material.floatinglabel.internal.Utils;
+
+import hugo.weaving.DebugLog;
 
 /**
  * Created by Eugen on 16. 3. 2015.
  */
 public class FloatingHelperView extends AbstractFloatingLabelView {
+    private static final String TAG = FloatingHelperView.class.getSimpleName();
 
-    private static final String SAVED_SUPER_STATE = "SAVED_SUPER_STATE";
-    private static final String SAVED_TEXT_ERROR_ID = "SAVED_TEXT_ERROR_ID";
-    private static final String SAVED_TEXT_ERROR = "SAVED_TEXT_ERROR";
-    private static final String SAVED_COLOR_ERROR = "SAVED_COLOR_ERROR";
-    private static final String SAVED_USE_COLOR_ERROR = "SAVED_USE_COLOR_ERROR";
-    private static final String SAVED_BACKGROUND_ERROR_ID = "SAVED_BACKGROUND_ERROR_ID";
-//    private static final String SAVED_BACKGROUND_ERROR = "SAVED_BACKGROUND_ERROR";
+    private static final String SAVED_ERROR = "savedError";
+    private static final String SAVED_SUPER_STATE = "superState";
 
-    private int mTextErrorId;
     private CharSequence mTextError;
 
     private int mColorError;
     private boolean mUseColorError;
-
-    private int mBackgroundErrorId;
     private Drawable mBackgroundError;
-
     private Drawable mBackgroundOriginal;
+
     private boolean mError;
+    private boolean mSavedError;
 
     protected int getDefaultStyle() {
         return R.attr.floatingHelperViewStyle;
@@ -70,18 +67,16 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
         init(context, attrs, defStyleAttr, defStyleRes);
     }
 
+    @DebugLog
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         TypedArray a;
         a = context.obtainStyledAttributes(attrs, R.styleable.FloatingLabelView, defStyleAttr, defStyleRes);
 
-        mTextErrorId = a.getResourceId(R.styleable.FloatingLabelView_flv_textError, 0);
-        if (mTextErrorId == 0) {
-            mTextError = a.getText(R.styleable.FloatingLabelView_flv_textError);
-        }
+        mTextError = a.getText(R.styleable.FloatingLabelView_flv_textError);
         onTextErrorChanged();
 
         mColorError = a.getColor(R.styleable.FloatingLabelView_flv_colorError, 0);
-        mBackgroundErrorId = a.getResourceId(R.styleable.FloatingLabelView_flv_ownerViewBackgroundError, 0);
+        mBackgroundError = a.getDrawable(R.styleable.FloatingLabelView_flv_ownerViewBackgroundError);
         mUseColorError = a.getBoolean(R.styleable.FloatingLabelView_flv_ownerViewUseColorError, true);
         onColorErrorChanged();
 
@@ -94,32 +89,20 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     }
 
     @Override
+    @DebugLog
     public Parcelable onSaveInstanceState() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(SAVED_SUPER_STATE, super.onSaveInstanceState());
-        bundle.putInt(SAVED_TEXT_ERROR_ID, mTextErrorId);
-        bundle.putCharSequence(SAVED_TEXT_ERROR, mTextError);
-        bundle.putInt(SAVED_COLOR_ERROR, mColorError);
-        bundle.putBoolean(SAVED_USE_COLOR_ERROR, mUseColorError);
-        bundle.putInt(SAVED_BACKGROUND_ERROR_ID, mBackgroundErrorId);
-        return bundle;
+        Bundle b = new Bundle();
+        b.putParcelable(SAVED_SUPER_STATE, super.onSaveInstanceState());
+        b.putBoolean(SAVED_ERROR, mError);
+        return b;
     }
 
     @Override
+    @DebugLog
     public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
-            Bundle bundle = (Bundle) state;
-
-            mTextErrorId = bundle.getInt(SAVED_TEXT_ERROR_ID);
-            mTextError = bundle.getCharSequence(SAVED_TEXT_ERROR);
-            onTextErrorChanged();
-
-            mColorError = bundle.getInt(SAVED_COLOR_ERROR);
-            mUseColorError = bundle.getBoolean(SAVED_USE_COLOR_ERROR);
-            mBackgroundErrorId = bundle.getInt(SAVED_BACKGROUND_ERROR_ID);
-            onColorErrorChanged();
-
-            state = bundle.getParcelable(SAVED_SUPER_STATE);
+            mSavedError = ((Bundle) state).getBoolean(SAVED_ERROR);
+            state = ((Bundle) state).getParcelable(SAVED_SUPER_STATE);
         }
         super.onRestoreInstanceState(state);
     }
@@ -136,43 +119,31 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     }
 
     public void setTextError(CharSequence cs) {
-        mTextErrorId = 0;
         mTextError = cs;
         onTextErrorChanged();
     }
 
     public void setTextError(@StringRes int resId) {
-        mTextErrorId = resId;
-        mTextError = null;
+        mTextError = getContext().getText(resId);
         onTextErrorChanged();
     }
 
     public CharSequence getTextError() {
-        if (mTextErrorId > 0) {
-            return getResources().getText(mTextErrorId);
-        } else {
-            return mTextError;
-        }
+        return mTextError;
     }
 
     public void setBackgroundError(Drawable d) {
-        mBackgroundErrorId = 0;
         mBackgroundError = d;
         onBackgroundErrorChanged();
     }
 
     public void setBackgroundError(@DrawableRes int resId) {
-        mBackgroundErrorId = resId;
-        mBackgroundError = null;
+        mBackgroundError = FloatingLabelUtils.getDrawable(getContext(), resId);
         onBackgroundErrorChanged();
     }
 
     public Drawable getBackgroundError() {
-        if (mBackgroundErrorId > 0) {
-            return getResources().getDrawable(mBackgroundErrorId);
-        } else {
-            return mBackgroundError;
-        }
+        return mBackgroundError;
     }
 
     public void setUseColorError(boolean value) {
@@ -285,8 +256,8 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
 
         // original background may have been null in the first place
 //        if (mBackgroundOriginal != null) {
-            Utils.setBackground(ownerView, mBackgroundOriginal);
-            mBackgroundOriginal = null;
+        Utils.setBackground(ownerView, mBackgroundOriginal);
+        mBackgroundOriginal = null;
 //        }
     }
 
@@ -317,6 +288,7 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     }
 
     @Override
+    @DebugLog
     protected void onOwnerViewTextChanged(int oldLen, CharSequence s) {
         int trigger = getTrigger();
 
@@ -349,6 +321,7 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     }
 
     @Override
+    @DebugLog
     protected void onOwnerViewFocusChanged(boolean focused) {
         if (getTrigger() != Trigger.FOCUS) return;
 
@@ -360,6 +333,15 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
             if (!mError) {
                 hide();
             }
+        }
+    }
+
+    @Override
+    protected void onSetupOwnerView() {
+        Log.d(TAG, "mSavedError=" + mSavedError);
+        if (mSavedError) {
+            mSavedError = false;
+            showError();
         }
     }
 }

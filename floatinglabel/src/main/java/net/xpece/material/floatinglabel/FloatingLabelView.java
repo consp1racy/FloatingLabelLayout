@@ -18,7 +18,6 @@ public class FloatingLabelView extends AbstractFloatingLabelView {
 
     private static final String SAVED_SUPER_STATE = "SAVED_SUPER_STATE";
     private static final String SAVED_ORIGINAL_HINT = "SAVED_ORIGINAL_HINT";
-    private static final String SAVED_COLOR_ACTIVATED = "SAVED_COLOR_ACTIVATED";
 
     private CharSequence mOriginalHint;
     private int mColorActivated;
@@ -59,7 +58,6 @@ public class FloatingLabelView extends AbstractFloatingLabelView {
     public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
         bundle.putCharSequence(SAVED_ORIGINAL_HINT, mOriginalHint);
-        bundle.putInt(SAVED_COLOR_ACTIVATED, mColorActivated);
         return super.onSaveInstanceState();
     }
 
@@ -70,12 +68,17 @@ public class FloatingLabelView extends AbstractFloatingLabelView {
 
             mOriginalHint = bundle.getCharSequence(SAVED_ORIGINAL_HINT);
 
-            mColorActivated = bundle.getInt(SAVED_COLOR_ACTIVATED);
-            onColorActivatedChanged();
-
             state = bundle.getParcelable(SAVED_SUPER_STATE);
         }
         super.onRestoreInstanceState(state);
+    }
+
+    @Override
+    protected void onLayout() {
+        TextView tv = getTextView();
+        if (tv != null && tv.length() > 0) {
+            show();
+        }
     }
 
     @Override
@@ -116,7 +119,7 @@ public class FloatingLabelView extends AbstractFloatingLabelView {
                         mOriginalHint = null;
                     }
                 } else {
-                    // keep showing label
+                    show(); // ensure non-empty TextViews have a label
                     return;
                 }
             }

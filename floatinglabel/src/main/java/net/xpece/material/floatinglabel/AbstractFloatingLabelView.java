@@ -1,12 +1,11 @@
 package net.xpece.material.floatinglabel;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.StringRes;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,6 +25,8 @@ import net.xpece.material.floatinglabel.internal.OnFocusChangeListenerWrapper;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
+import hugo.weaving.DebugLog;
+
 /**
  * Created by Eugen on 18. 3. 2015.
  */
@@ -33,29 +34,17 @@ abstract class AbstractFloatingLabelView extends TextView {
 
     protected static final long ANIMATION_DURATION = 150; //short
 
-    private static final int[] ATTRS_TEXT_APPEARANCE = {
-        android.R.attr.textAppearance
-    };
-
-    private static final String SAVED_SUPER_STATE = "SAVED_SUPER_STATE";
-    private static final String SAVED_TRIGGER = "SAVED_TRIGGER";
-    private static final String SAVED_OWNER_VIEW_POSITION = "SAVED_OWNER_VIEW_POSITION";
-    private static final String SAVED_OWNER_VIEW_ID = "SAVED_OWNER_VIEW_ID";
-    private static final String SAVED_TEXT_DEFAULT_ID = "SAVED_TEXT_DEFAULT_ID";
-    private static final String SAVED_TEXT_DEFAULT = "SAVED_TEXT_DEFAULT";
-    private static final String SAVED_COLOR_DEFAULT = "SAVED_COLOR_DEFAULT";
-
     private int mOwnerViewId;
     private View mOwnerView;
     @Position
     private int mOwnerViewPosition;
     @Trigger
     private int mTrigger;
-    private int mTextDefaultId;
     private CharSequence mTextDefault;
     private int mColorDefault;
 
     private boolean mWasSupposedToBeVisible;
+    private boolean mLaidOut = false; // do not save state on this one
 
     private OnClickListener mOnClickRequestFocus = new OnClickListener() {
         @Override
@@ -71,9 +60,7 @@ abstract class AbstractFloatingLabelView extends TextView {
         @Override
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         public void onFocusChange(View view, boolean focused) {
-            if (mTrigger == Trigger.FOCUS) {
-                onOwnerViewFocusChanged(focused);
-            }
+            onOwnerViewFocusChanged(focused);
         }
     };
 
@@ -121,16 +108,15 @@ abstract class AbstractFloatingLabelView extends TextView {
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-
         mWasSupposedToBeVisible = getVisibility() == VISIBLE;
         setVisibility(INVISIBLE);
 
         TypedArray a;
 
-        a = context.obtainStyledAttributes(attrs, ATTRS_TEXT_APPEARANCE, defStyleAttr, defStyleRes);
-        int textAppearance = a.getResourceId(0, android.R.style.TextAppearance_Small);
-        a.recycle();
-        setTextAppearance(context, textAppearance);
+//        a = context.obtainStyledAttributes(attrs, ATTRS_TEXT_APPEARANCE, defStyleAttr, defStyleRes);
+//        int textAppearance = a.getResourceId(0, android.R.style.TextAppearance_Small);
+//        a.recycle();
+//        setTextAppearance(context, textAppearance);
 
         a = context.obtainStyledAttributes(attrs, R.styleable.FloatingLabelView, defStyleAttr, defStyleRes);
 
@@ -138,10 +124,7 @@ abstract class AbstractFloatingLabelView extends TextView {
         mOwnerViewPosition = a.getInteger(R.styleable.FloatingLabelView_flv_ownerViewPosition, 0);
         mTrigger = a.getInteger(R.styleable.FloatingLabelView_flv_trigger, 0);
 
-        mTextDefaultId = a.getResourceId(R.styleable.FloatingLabelView_flv_textDefault, 0);
-        if (mTextDefaultId == 0) {
-            mTextDefault = a.getText(R.styleable.FloatingLabelView_flv_textDefault);
-        }
+        mTextDefault = a.getText(R.styleable.FloatingLabelView_flv_textDefault);
         onTextDefaultChanged();
 
         mColorDefault = a.getColor(R.styleable.FloatingLabelView_flv_colorDefault, 0);
@@ -157,69 +140,31 @@ abstract class AbstractFloatingLabelView extends TextView {
         }
     }
 
+    @SuppressLint("WrongCall")
     @Override
-    public Parcelable onSaveInstanceState() {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(SAVED_SUPER_STATE, super.onSaveInstanceState());
-        bundle.putInt(SAVED_TRIGGER, mTrigger);
-        bundle.putInt(SAVED_OWNER_VIEW_POSITION, mOwnerViewPosition);
-        bundle.putInt(SAVED_OWNER_VIEW_ID, mOwnerViewId);
-        bundle.putInt(SAVED_TEXT_DEFAULT_ID, mTextDefaultId);
-        bundle.putCharSequence(SAVED_TEXT_DEFAULT, mTextDefault);
-        bundle.putInt(SAVED_COLOR_DEFAULT, mColorDefault);
-        return bundle;
-    }
-
-    @Override
-    public void onRestoreInstanceState(Parcelable state) {
-        if (state instanceof Bundle) {
-            Bundle bundle = (Bundle) state;
-
-            mTrigger = bundle.getInt(SAVED_TRIGGER);
-            mOwnerViewId = bundle.getInt(SAVED_OWNER_VIEW_ID);
-            mOwnerViewPosition = bundle.getInt(SAVED_OWNER_VIEW_POSITION);
-
-            mTextDefaultId = bundle.getInt(SAVED_TEXT_DEFAULT_ID);
-            mTextDefault = bundle.getCharSequence(SAVED_TEXT_DEFAULT);
-            onTextDefaultChanged();
-
-            mColorDefault = bundle.getInt(SAVED_COLOR_DEFAULT);
-            onColorDefaultChanged();
-
-            if (mTrigger == Trigger.FOCUS) {
-                View v = getOwnerView();
-                if (v != null) {
-                    onOwnerViewFocusChanged(v.isFocused());
-                }
-            } else if (mTrigger == Trigger.TEXT) {
-                TextView tv = getTextView();
-                if (tv != null) {
-                    onOwnerViewTextChanged(0, tv.getText());
-                }
-            }
-
-            state = bundle.getParcelable(SAVED_SUPER_STATE);
-        }
-        super.onRestoreInstanceState(state);
-    }
-
-    @Override
+    @DebugLog
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
-        if (changed) {
-            if (mOwnerViewId != 0) {
-                View v = ((ViewGroup) getParent()).findViewById(mOwnerViewId);
-                setOwnerView(v);
-                mOwnerViewId = 0;
+        if (changed && !mLaidOut) {
+            View v = ((ViewGroup) getParent()).findViewById(mOwnerViewId);
+            setOwnerView(v);
+//            mOwnerViewId = 0;
+            mLaidOut = true;
 
-                if (getTrigger() == Trigger.MANUAL) {
+            if (getTrigger() == Trigger.MANUAL) {
+                if (mWasSupposedToBeVisible) {
                     show();
                 }
             }
+
+            onLayout();
         }
     }
 
+    protected void onLayout() { }
+
+    @DebugLog
     public void setOwnerView(View v) {
         if (v == null) {
             setVisibility(INVISIBLE);
@@ -240,23 +185,17 @@ abstract class AbstractFloatingLabelView extends TextView {
     }
 
     public void setTextDefault(CharSequence cs) {
-        mTextDefaultId = 0;
         mTextDefault = cs;
         onTextDefaultChanged();
     }
 
     public void setTextDefault(@StringRes int resId) {
-        mTextDefaultId = resId;
-        mTextDefault = null;
+        mTextDefault = getContext().getText(resId);
         onTextDefaultChanged();
     }
 
     public CharSequence getTextDefault() {
-        if (mTextDefaultId > 0) {
-            return getResources().getText(mTextDefaultId);
-        } else {
-            return mTextDefault;
-        }
+        return mTextDefault;
     }
 
     public int getTrigger() {
@@ -365,6 +304,7 @@ abstract class AbstractFloatingLabelView extends TextView {
         }
     }
 
+    @DebugLog
     protected void setupOwnerView() {
         if (mOwnerView != null) {
             OnFocusChangeListenerWrapper.add(mOwnerView, mOnFocusChangeListener);
