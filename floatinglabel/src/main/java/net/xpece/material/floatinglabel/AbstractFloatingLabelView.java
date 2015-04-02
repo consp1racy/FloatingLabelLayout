@@ -25,8 +25,6 @@ import net.xpece.material.floatinglabel.internal.OnFocusChangeListenerWrapper;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import hugo.weaving.DebugLog;
-
 /**
  * Created by Eugen on 18. 3. 2015.
  */
@@ -135,14 +133,13 @@ abstract class AbstractFloatingLabelView extends TextView {
         setOnClickListener(mOnClickRequestFocus);
 
         if (isInEditMode()) {
-            setText(getTextDefault());
-            setVisibility(VISIBLE);
+//            setText(getTextDefault());
+//            setVisibility(VISIBLE);
         }
     }
 
     @SuppressLint("WrongCall")
     @Override
-    @DebugLog
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
@@ -164,7 +161,6 @@ abstract class AbstractFloatingLabelView extends TextView {
 
     protected void onLayout() { }
 
-    @DebugLog
     public void setOwnerView(View v) {
         if (v == null) {
             setVisibility(INVISIBLE);
@@ -304,7 +300,6 @@ abstract class AbstractFloatingLabelView extends TextView {
         }
     }
 
-    @DebugLog
     protected void setupOwnerView() {
         if (mOwnerView != null) {
             OnFocusChangeListenerWrapper.add(mOwnerView, mOnFocusChangeListener);

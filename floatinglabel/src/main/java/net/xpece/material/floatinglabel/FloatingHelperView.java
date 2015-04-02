@@ -16,8 +16,6 @@ import android.view.View;
 
 import net.xpece.material.floatinglabel.internal.Utils;
 
-import hugo.weaving.DebugLog;
-
 /**
  * Created by Eugen on 16. 3. 2015.
  */
@@ -67,7 +65,6 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
         init(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    @DebugLog
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         TypedArray a;
         a = context.obtainStyledAttributes(attrs, R.styleable.FloatingLabelView, defStyleAttr, defStyleRes);
@@ -89,7 +86,6 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     }
 
     @Override
-    @DebugLog
     public Parcelable onSaveInstanceState() {
         Bundle b = new Bundle();
         b.putParcelable(SAVED_SUPER_STATE, super.onSaveInstanceState());
@@ -98,7 +94,6 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     }
 
     @Override
-    @DebugLog
     public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
             mSavedError = ((Bundle) state).getBoolean(SAVED_ERROR);
@@ -288,7 +283,6 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     }
 
     @Override
-    @DebugLog
     protected void onOwnerViewTextChanged(int oldLen, CharSequence s) {
         int trigger = getTrigger();
 
@@ -321,7 +315,6 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     }
 
     @Override
-    @DebugLog
     protected void onOwnerViewFocusChanged(boolean focused) {
         if (getTrigger() != Trigger.FOCUS) return;
 

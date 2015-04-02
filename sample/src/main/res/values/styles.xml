@@ -6,6 +6,8 @@
         <item name="colorAccent">#0d47a1</item>
 
         <item name="floatingLabelViewStyle">@style/Widget.AppTheme.FloatingLabelView</item>
+        <item name="floatingHelperViewStyle">@style/Widget.AppTheme.FloatingLabelView</item>
+        <item name="characterCounterViewStyle">@style/Widget.AppTheme.FloatingLabelView</item>
     </style>
 
     <style name="Widget.AppTheme.FloatingLabelView" parent="Widget.FloatingLabelView">
