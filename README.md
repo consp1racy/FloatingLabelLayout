@@ -5,7 +5,7 @@ Floating Label according to Material Design spec.
 Contains floating label, floating helper/error and floating character counter widgets
 for use mainly with `EditText` but capable of handling any other view.
 
-The library is now available from ~~API 4~~ API 7 (because it's easier to debug / because Hugo is supported from API 7).
+The library is now available from API 4.
 
 ## How to get the library?
 
@@ -161,6 +161,9 @@ The style will look similar to this:
     </style>
 
 ## Changelog
+
+**0.2.2**
+- Fixed issues with preview
 
 **0.2.1**
 - *FIXED:* Correct text and drawable state after OC (orientation change)

@@ -133,8 +133,8 @@ abstract class AbstractFloatingLabelView extends TextView {
         setOnClickListener(mOnClickRequestFocus);
 
         if (isInEditMode()) {
-//            setText(getTextDefault());
-//            setVisibility(VISIBLE);
+            setText(getTextDefault());
+            setVisibility(VISIBLE);
         }
     }
 
