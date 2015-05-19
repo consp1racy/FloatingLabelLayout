@@ -2,6 +2,7 @@ package net.xpece.material.floatinglabel.internal;
 
 import android.annotation.TargetApi;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
@@ -56,6 +57,15 @@ public class Utils {
         // color the overall Drawable
         d.setColorFilter(color, PorterDuff.Mode.SRC_IN);
         return d;
+    }
+
+    public static int blendColorsWithAlpha(int color1, int color2, float ratio) {
+        final float inverseRatio = 1f - ratio;
+        float a = (Color.alpha(color1) * ratio) + (Color.alpha(color2) * inverseRatio);
+        float r = (Color.red(color1) * ratio) + (Color.red(color2) * inverseRatio);
+        float g = (Color.green(color1) * ratio) + (Color.green(color2) * inverseRatio);
+        float b = (Color.blue(color1) * ratio) + (Color.blue(color2) * inverseRatio);
+        return Color.argb((int) a, (int) r, (int) g, (int) b);
     }
 
 }

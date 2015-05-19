@@ -24,9 +24,10 @@ android {
 }
 
 dependencies {
-    debugCompile project(path: ':floatinglabel', configuration: 'debug')
-    releaseCompile project(path: ':floatinglabel', configuration: 'release')
-    compile 'com.android.support:appcompat-v7:22.0.0'
+//    debugCompile project(path: ':floatinglabel', configuration: 'debug')
+//    releaseCompile project(path: ':floatinglabel', configuration: 'release')
+    compile project(":floatinglabel")
+    compile 'com.android.support:appcompat-v7:22.1.1'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.jakewharton.timber:timber:2.7.1'
 }

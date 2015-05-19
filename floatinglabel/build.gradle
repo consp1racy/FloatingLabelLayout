@@ -21,19 +21,20 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
-    publishNonDefault true
-    defaultPublishConfig "release"
+//    publishNonDefault true
+//    defaultPublishConfig "release"
 }
 
 dependencies {
     compile 'com.android.support:support-annotations:22.0.0'
+    compile 'com.android.support:support-v4:22.1.1'
     compile 'com.nineoldandroids:library:2.4.0'
 }
 
 ext {
     PUBLISH_GROUP_ID = 'net.xpece.material'
     PUBLISH_ARTIFACT_ID = 'floating-label'
-    PUBLISH_VERSION = '0.2.2'
+    PUBLISH_VERSION = '0.2.3'
 }
 
 apply from: '../android-release-aar.gradle'

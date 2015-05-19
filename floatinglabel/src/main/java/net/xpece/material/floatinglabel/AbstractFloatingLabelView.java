@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.StringRes;
 import android.text.Editable;
@@ -21,6 +20,7 @@ import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import net.xpece.material.floatinglabel.internal.OnFocusChangeListenerWrapper;
+import net.xpece.material.floatinglabel.internal.Utils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -364,29 +364,40 @@ abstract class AbstractFloatingLabelView extends TextView {
 
         final int source = getCurrentTextColor();
 
-        final float[] from = new float[3];
-        final float[] to = new float[3];
-        final int alphaSource = Color.alpha(source);
-        final int alphaTarget = Color.alpha(target);
+        // Unsuitable for transforming greyscale to non red colors. Hue for black is red.
+//        final float[] from = new float[3];
+//        final float[] to = new float[3];
+//        final int alphaSource = Color.alpha(source);
+//        final int alphaTarget = Color.alpha(target);
+//
+//        Color.colorToHSV(source, from);
+//        Color.colorToHSV(target, to);
+//        final int alphaDiff = alphaTarget - alphaSource;
+//
+//        final float[] hsv = new float[3];
+//        ValueAnimator anim = ValueAnimator.ofFloat(0, 1).setDuration(ANIMATION_DURATION);
+//        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                // Transition along each axis of HSV (hue, saturation, value)
+//                hsv[0] = from[0] + (to[0] - from[0]) * animation.getAnimatedFraction();
+//                hsv[1] = from[1] + (to[1] - from[1]) * animation.getAnimatedFraction();
+//                hsv[2] = from[2] + (to[2] - from[2]) * animation.getAnimatedFraction();
+////                setTextColor(Color.HSVToColor(hsv));
+//                final int alpha = alphaSource + (int) (alphaDiff * animation.getAnimatedFraction());
+//                setTextColor(Color.HSVToColor(hsv) & ((alpha << 24) | 0xffffff));
+//            }
+//        });
 
-        Color.colorToHSV(source, from);
-        Color.colorToHSV(target, to);
-        final int alphaDiff = alphaTarget - alphaSource;
-
-        final float[] hsv = new float[3];
-        ValueAnimator anim = ValueAnimator.ofFloat(0, 1).setDuration(ANIMATION_DURATION);
+        ValueAnimator anim = ValueAnimator.ofFloat(0, 1);
         anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                // Transition along each axis of HSV (hue, saturation, value)
-                hsv[0] = from[0] + (to[0] - from[0]) * animation.getAnimatedFraction();
-                hsv[1] = from[1] + (to[1] - from[1]) * animation.getAnimatedFraction();
-                hsv[2] = from[2] + (to[2] - from[2]) * animation.getAnimatedFraction();
-//                setTextColor(Color.HSVToColor(hsv));
-                final int alpha = alphaSource + (int) (alphaDiff * animation.getAnimatedFraction());
-                setTextColor(Color.HSVToColor(hsv) & ((alpha << 24) | 0xffffff));
+                int color = Utils.blendColorsWithAlpha(source, target, animation.getAnimatedFraction());
+                setTextColor(color);
             }
         });
+
         anim.start();
     }
 

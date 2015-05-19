@@ -43,6 +43,7 @@
                 app:flv_ownerView="@+id/et_username"
                 app:flv_characterLimit="10"
                 app:flv_trigger="focus"
+                app:flv_ownerViewPosition="top"
                 android:layout_gravity="end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -82,6 +83,7 @@
                 app:flv_textDefault="Enter your password"
                 app:flv_textError="The password is wrong. Try again."
                 app:flv_ownerView="@id/et_password"
+                app:flv_ownerViewPosition="top"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -158,8 +160,8 @@
                 android:paddingRight="@dimen/abc_control_inset_material"
                 app:flv_textDefault="YYYY-MM-DD"
                 app:flv_textError="YYY-MM-DD"
+                app:flv_ownerViewPosition="top"
                 app:flv_ownerView="@id/sp_month"
-                style="@style/Widget.FloatingLabelView.Helper.Custom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

@@ -23,10 +23,6 @@
         <item name="flv_ownerViewPosition">top</item>
     </style>
 
-    <style name="Widget.FloatingLabelView.Helper.Custom">
-        <item name="flv_ownerViewUseColorError">false</item>
-    </style>
-
     <style name="Widget.FloatingLabelView.CharacterCounter" parent="Widget.FloatingLabelView.Helper">
         <item name="android:gravity">end</item>
         <item name="flv_trigger">text</item>

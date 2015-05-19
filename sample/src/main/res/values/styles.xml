@@ -13,7 +13,7 @@
     <style name="Widget.AppTheme.FloatingLabelView" parent="Widget.FloatingLabelView">
         <item name="flv_colorActivated">?colorControlActivated</item>
         <item name="flv_colorDefault">?colorControlNormal</item>
-        <item name="flv_ownerViewBackgroundError">@drawable/abc_textfield_activated_mtrl_alpha</item>
+        <!--<item name="flv_ownerViewBackgroundError">@drawable/abc_edit_text_material</item>-->
         <item name="flv_ownerViewUseColorError">true</item>
     </style>
 

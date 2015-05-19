@@ -1,6 +1,5 @@
 package net.xpece.material.floatinglabel.sample;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import net.xpece.material.floatinglabel.FloatingHelperView;
-import net.xpece.material.floatinglabel.FloatingLabelUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -45,11 +43,6 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
-
-        Drawable spinner = getResources().getDrawable(R.drawable.abc_spinner_mtrl_am_alpha);
-        Drawable textField = getResources().getDrawable(R.drawable.abc_textfield_activated_mtrl_alpha);
-        int color = getResources().getColor(R.color.flv_error);
-        mHelperMonth.setBackgroundError(FloatingLabelUtils.getCompositeErrorDrawable(spinner, textField, color));
 
         mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, DATA_SET){
             @Override

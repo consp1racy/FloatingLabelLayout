@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -30,7 +32,9 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     private int mColorError;
     private boolean mUseColorError;
     private Drawable mBackgroundError;
+    private Drawable mProcessedBackgroundError;
     private Drawable mBackgroundOriginal;
+    private boolean mOverriddenBackground;
 
     private boolean mError;
     private boolean mSavedError;
@@ -133,7 +137,7 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     }
 
     public void setBackgroundError(@DrawableRes int resId) {
-        mBackgroundError = FloatingLabelUtils.getDrawable(getContext(), resId);
+        mBackgroundError = ContextCompat.getDrawable(getContext(), resId);
         onBackgroundErrorChanged();
     }
 
@@ -166,7 +170,6 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
         if (!mError) {
             View ownerView = getOwnerView();
             if (ownerView != null) {
-                mBackgroundOriginal = ownerView.getBackground();
                 overrideOwnerViewColors();
             }
 
@@ -207,6 +210,7 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     }
 
     protected void onColorErrorChanged() {
+        mProcessedBackgroundError = null;
         if (mError) {
             overrideOwnerViewColors();
             setTextColor(mColorError);
@@ -234,12 +238,14 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     }
 
     protected void onBackgroundErrorChanged() {
+        mProcessedBackgroundError = null;
         if (mError) {
             overrideOwnerViewColors();
         }
     }
 
     protected void onUseColorErrorChanged() {
+        mProcessedBackgroundError = null;
         if (mError) {
             overrideOwnerViewColors();
         }
@@ -250,36 +256,40 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
         if (ownerView == null) return;
 
         // original background may have been null in the first place
-//        if (mBackgroundOriginal != null) {
-        Utils.setBackground(ownerView, mBackgroundOriginal);
-        mBackgroundOriginal = null;
-//        }
+        if (mOverriddenBackground) {
+            Utils.setBackground(ownerView, mBackgroundOriginal);
+            mBackgroundOriginal = null;
+            mOverriddenBackground = false;
+        }
     }
 
     private void overrideOwnerViewColors() {
         View ownerView = getOwnerView();
         if (ownerView == null) return;
 
-        Drawable backgroundError = getBackgroundError();
-        boolean useColorError = getUseColorError();
+        if (!mOverriddenBackground) {
+            mBackgroundOriginal = ownerView.getBackground();
+            mOverriddenBackground = true;
+        }
 
-        Drawable d;
-        if (backgroundError != null) {
-            if (useColorError) {
-                d = Utils.colorizeDrawable(backgroundError, getColorError());
-            } else {
+        if (mProcessedBackgroundError == null) {
+            Drawable backgroundError = getBackgroundError();
+            boolean useColorError = getUseColorError();
+
+            Drawable d;
+            if (backgroundError != null) {
                 d = backgroundError;
-            }
-        } else {
-            if (useColorError && mBackgroundOriginal != null) {
-                d = Utils.colorizeDrawable(mBackgroundOriginal, getColorError());
             } else {
                 d = mBackgroundOriginal;
             }
+            if (d != null && useColorError) {
+                d = d.getConstantState().newDrawable();
+                d = DrawableCompat.wrap(d);
+                DrawableCompat.setTint(d, getColorError());
+            }
+            mProcessedBackgroundError = d;
         }
-        if (d != mBackgroundOriginal) {
-            Utils.setBackground(ownerView, d);
-        }
+        Utils.setBackground(ownerView, mProcessedBackgroundError);
     }
 
     @Override
