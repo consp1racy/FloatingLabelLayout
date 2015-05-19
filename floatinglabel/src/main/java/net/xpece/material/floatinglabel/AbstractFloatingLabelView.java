@@ -354,7 +354,7 @@ abstract class AbstractFloatingLabelView extends TextView {
 
     /**
      * @param target
-     * @see {@code http://stackoverflow.com/questions/18216285/android-animate-color-change-from-color-to-color}
+     * http://stackoverflow.com/questions/18216285/android-animate-color-change-from-color-to-color
      */
     protected final void setTextColorSmooth(final int target) {
         if (getVisibility() != VISIBLE) {
