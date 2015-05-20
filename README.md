@@ -16,7 +16,8 @@ to use `LinearLayout`s or prescribed IDs.*
 
 ## Screenshots
 
-![FloatingLabelView Showcase](./docs/device-2015-05-20-120951.png)
+![Showcase 1](./docs/device-2015-05-20-120951.png)
+![Showcase 2](./docs/device-2015-05-20-123714.png)
 
 ## How to get the library?
 
