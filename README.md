@@ -1,11 +1,14 @@
 # Material Floating Label
 
+<img src="./sample/src/main/res/mipmap-xxhdpi/ic_launcher.png" align="right" style="margin-left: 1em;"/>
+
 Floating Label according to Material Design spec.
 
 Contains floating label, floating helper/error and floating character counter widgets
-for use mainly with `EditText` but capable of handling any other view.
+for use mainly with `EditText`.
 
 Intended behavior is best described here:
+
 http://www.google.com/design/spec/components/text-fields.html#text-fields-character-counter
 
 The library is now available from API 4.
