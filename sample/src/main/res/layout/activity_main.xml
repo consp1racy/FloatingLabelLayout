@@ -1,152 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fillViewport="true">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp">
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/divider_background"
             android:orientation="vertical"
-            android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:background="@drawable/divider_background"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:paddingTop="8dp">
 
             <net.xpece.material.floatinglabel.FloatingLabelView
+                android:id="@+id/title_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/abc_control_inset_material"
                 android:paddingRight="@dimen/abc_control_inset_material"
-                app:flv_textDefault="@string/account_username_hint"
                 app:flv_ownerView="@+id/et_username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                app:flv_textDefault="@string/account_username_hint"/>
 
             <EditText
                 android:id="@+id/et_username"
-                android:hint="@string/account_username_hint"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:hint="@string/account_username_hint"/>
 
             <net.xpece.material.floatinglabel.CharacterCounterView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
                 android:paddingLeft="@dimen/abc_control_inset_material"
                 android:paddingRight="@dimen/abc_control_inset_material"
-                app:flv_ownerView="@+id/et_username"
                 app:flv_characterLimit="10"
-                app:flv_trigger="focus"
+                app:flv_ownerView="@+id/et_username"
                 app:flv_ownerViewPosition="top"
-                android:layout_gravity="end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                app:flv_titleView="@id/title_username"
+                app:flv_trigger="focus"/>
 
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/divider_background"
             android:orientation="vertical"
-            android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:background="@drawable/divider_background"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:paddingTop="8dp">
 
             <net.xpece.material.floatinglabel.FloatingLabelView
+                android:id="@+id/title_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/abc_control_inset_material"
                 android:paddingRight="@dimen/abc_control_inset_material"
-                app:flv_textDefault="@string/account_password_hint"
                 app:flv_ownerView="@+id/et_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                app:flv_textDefault="@string/account_password_hint"/>
 
             <EditText
                 android:id="@+id/et_password"
-                android:inputType="textPassword"
-                android:hint="@string/account_password_hint"
-                android:minEms="10"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:hint="@string/account_password_hint"
+                android:inputType="textPassword"
+                android:minEms="10"/>
 
             <net.xpece.material.floatinglabel.FloatingHelperView
                 android:id="@+id/helper_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/abc_control_inset_material"
                 android:paddingRight="@dimen/abc_control_inset_material"
-                app:flv_textDefault="Enter your password"
-                app:flv_textError="The password is wrong. Try again."
                 app:flv_ownerView="@id/et_password"
                 app:flv_ownerViewPosition="top"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                app:flv_textDefault="Enter your password"
+                app:flv_textError="The password is wrong. Try again."
+                app:flv_titleView="@id/title_password"/>
 
             <Button
                 android:id="@+id/check_password"
-                android:text="@string/check"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@string/check"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:paddingTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/divider_background"
             android:paddingBottom="8dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:background="@drawable/divider_background"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:paddingTop="8dp">
 
             <EditText
-                android:layout_marginRight="4dp"
-                android:layout_marginLeft="4dp"
                 android:id="@+id/et_inline"
-                android:hint="@string/inline"
-                android:singleLine="true"
-                android:background="@null"
-                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="@string/inline"
+                android:singleLine="true"/>
 
             <net.xpece.material.floatinglabel.CharacterCounterView
-                android:layout_marginRight="4dp"
-                android:layout_marginEnd="4dp"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
-                android:minWidth="88dp"
-                app:flv_ownerView="@id/et_inline"
-                app:flv_characterLimit="10"
-                app:flv_ownerViewPosition="undefined"
                 style="@style/Widget.FloatingLabelView.CharacterCounter.Inline"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginRight="4dp"
+                android:minWidth="88dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                app:flv_characterLimit="10"
+                app:flv_ownerView="@id/et_inline"
+                app:flv_ownerViewPosition="undefined"/>
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/divider_background"
             android:orientation="vertical"
-            android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:paddingLeft="12dp"
             android:paddingRight="12dp"
-            android:background="@drawable/divider_background"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:paddingTop="8dp">
 
             <net.xpece.material.floatinglabel.FloatingLabelView
+                android:id="@+id/title_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/abc_control_inset_material"
                 android:paddingRight="@dimen/abc_control_inset_material"
-                app:flv_textDefault="@string/month"
                 app:flv_ownerView="@+id/sp_month"
-                app:flv_trigger="manual"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                app:flv_textDefault="@string/month"
+                app:flv_trigger="manual"/>
 
             <Spinner
                 android:id="@+id/sp_month"
@@ -156,20 +161,20 @@
 
             <net.xpece.material.floatinglabel.FloatingHelperView
                 android:id="@+id/helper_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/abc_control_inset_material"
                 android:paddingRight="@dimen/abc_control_inset_material"
-                app:flv_textDefault="YYYY-MM-DD"
-                app:flv_textError="YYY-MM-DD"
-                app:flv_ownerViewPosition="top"
                 app:flv_ownerView="@id/sp_month"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                app:flv_ownerViewPosition="top"
+                app:flv_textDefault="YYYY-MM-DD"
+                app:flv_titleView="@id/title_month"/>
 
             <Button
                 android:id="@+id/check_month"
-                android:text="@string/check"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="@string/check"/>
 
         </LinearLayout>
 

@@ -16,28 +16,30 @@ public class CharacterCounterView extends FloatingHelperView {
 
     private int mCharacterLimit;
 
-    protected int getDefaultStyle() {
+    @Override
+    protected int getDefaultStyleAttr() {
         return R.attr.characterCounterViewStyle;
     }
 
-    protected int getDefaultTheme() {
+    @Override
+    protected int getDefaultStyleRes() {
         return R.style.Widget_FloatingLabelView_CharacterCounter;
     }
 
     public CharacterCounterView(Context context) {
         super(context);
-        init(context, null, getDefaultStyle(), getDefaultTheme());
+        init(context, null, getDefaultStyleAttr(), getDefaultStyleRes());
     }
 
     public CharacterCounterView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs, getDefaultStyle(), getDefaultTheme());
+        init(context, attrs, getDefaultStyleAttr(), getDefaultStyleRes());
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public CharacterCounterView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs, defStyleAttr, getDefaultTheme());
+        init(context, attrs, defStyleAttr, getDefaultStyleRes());
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

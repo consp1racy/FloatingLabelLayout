@@ -10,6 +10,9 @@ import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
+
+import com.nineoldandroids.animation.ValueAnimator;
 
 /**
  * Created by Eugen on 9. 3. 2015.
@@ -66,6 +69,53 @@ public class Utils {
         float g = (Color.green(color1) * ratio) + (Color.green(color2) * inverseRatio);
         float b = (Color.blue(color1) * ratio) + (Color.blue(color2) * inverseRatio);
         return Color.argb((int) a, (int) r, (int) g, (int) b);
+    }
+
+    /**
+     * @param target
+     * http://stackoverflow.com/questions/18216285/android-animate-color-change-from-color-to-color
+     */
+    public static void setTextColorSmooth(final TextView subject, final int source, final int target) {
+        if (subject.getVisibility() != View.VISIBLE) {
+            subject.setTextColor(target);
+            return;
+        }
+
+        // Unsuitable for transforming greyscale to non red colors. Hue for black is red.
+//        final float[] from = new float[3];
+//        final float[] to = new float[3];
+//        final int alphaSource = Color.alpha(source);
+//        final int alphaTarget = Color.alpha(target);
+//
+//        Color.colorToHSV(source, from);
+//        Color.colorToHSV(target, to);
+//        final int alphaDiff = alphaTarget - alphaSource;
+//
+//        final float[] hsv = new float[3];
+//        ValueAnimator anim = ValueAnimator.ofFloat(0, 1).setDuration(ANIMATION_DURATION);
+//        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                // Transition along each axis of HSV (hue, saturation, value)
+//                hsv[0] = from[0] + (to[0] - from[0]) * animation.getAnimatedFraction();
+//                hsv[1] = from[1] + (to[1] - from[1]) * animation.getAnimatedFraction();
+//                hsv[2] = from[2] + (to[2] - from[2]) * animation.getAnimatedFraction();
+////                setTextColor(Color.HSVToColor(hsv));
+//                final int alpha = alphaSource + (int) (alphaDiff * animation.getAnimatedFraction());
+//                setTextColor(Color.HSVToColor(hsv) & ((alpha << 24) | 0xffffff));
+//            }
+//        });
+
+        ValueAnimator anim = ValueAnimator.ofFloat(0, 1);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int color = Utils.blendColorsWithAlpha(source, target, 1f - animation.getAnimatedFraction());
+                subject.setTextColor(color);
+            }
+        });
+
+        anim.start();
     }
 
 }

@@ -10,11 +10,11 @@ import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 
 import net.xpece.material.floatinglabel.internal.Utils;
 
@@ -27,40 +27,43 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     private static final String SAVED_ERROR = "savedError";
     private static final String SAVED_SUPER_STATE = "superState";
 
+    private boolean mSavedError;
+
     private CharSequence mTextError;
 
-    private int mColorError;
     private boolean mUseColorError;
     private Drawable mBackgroundError;
     private Drawable mProcessedBackgroundError;
     private Drawable mBackgroundOriginal;
     private boolean mOverriddenBackground;
 
-    private boolean mError;
-    private boolean mSavedError;
+    private int mTitleViewId;
+    private FloatingLabelView mTitleView;
 
-    protected int getDefaultStyle() {
+    @Override
+    protected int getDefaultStyleAttr() {
         return R.attr.floatingHelperViewStyle;
     }
 
-    protected int getDefaultTheme() {
+    @Override
+    protected int getDefaultStyleRes() {
         return R.style.Widget_FloatingLabelView_Helper;
     }
 
     public FloatingHelperView(Context context) {
         super(context);
-        init(context, null, getDefaultStyle(), getDefaultTheme());
+        init(context, null, getDefaultStyleAttr(), getDefaultStyleRes());
     }
 
     public FloatingHelperView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs, getDefaultStyle(), getDefaultTheme());
+        init(context, attrs, getDefaultStyleAttr(), getDefaultStyleRes());
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public FloatingHelperView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs, defStyleAttr, getDefaultTheme());
+        init(context, attrs, defStyleAttr, getDefaultStyleRes());
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -76,10 +79,11 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
         mTextError = a.getText(R.styleable.FloatingLabelView_flv_textError);
         onTextErrorChanged();
 
-        mColorError = a.getColor(R.styleable.FloatingLabelView_flv_colorError, 0);
         mBackgroundError = a.getDrawable(R.styleable.FloatingLabelView_flv_ownerViewBackgroundError);
         mUseColorError = a.getBoolean(R.styleable.FloatingLabelView_flv_ownerViewUseColorError, true);
-        onColorErrorChanged();
+        onBackgroundErrorChanged();
+
+        mTitleViewId = a.getResourceId(R.styleable.FloatingLabelView_flv_titleView, 0);
 
         a.recycle();
 
@@ -93,7 +97,7 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     public Parcelable onSaveInstanceState() {
         Bundle b = new Bundle();
         b.putParcelable(SAVED_SUPER_STATE, super.onSaveInstanceState());
-        b.putBoolean(SAVED_ERROR, mError);
+        b.putBoolean(SAVED_ERROR, hasErrorState());
         return b;
     }
 
@@ -106,15 +110,58 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
         super.onRestoreInstanceState(state);
     }
 
-    public void setColorError(int color) {
-        if (color != mColorError) {
-            mColorError = color;
-            onColorErrorChanged();
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+
+        if (changed) {
+            FloatingLabelView v = (FloatingLabelView) ((ViewGroup) getParent()).findViewById(mTitleViewId);
+            setTitleView(v);
         }
     }
 
-    public int getColorError() {
-        return mColorError;
+    public void setTitleView(FloatingLabelView v) {
+        if (v == null) {
+            setVisibility(INVISIBLE);
+        }
+        if (v != mTitleView) {
+            releaseTitleView();
+            mTitleView = v;
+            setupTitleView();
+        }
+    }
+
+    public FloatingLabelView getTitleView() {
+        return mTitleView;
+    }
+
+    protected void releaseTitleView() {
+        if (mTitleView != null) {
+            mTitleView.setErrorState(false);
+
+            onReleaseTitleView();
+        }
+    }
+
+    protected void setupTitleView() {
+        if (mTitleView != null) {
+            mTitleView.setErrorState(hasErrorState());
+
+            onSetupTitleView();
+        }
+    }
+
+    protected void onReleaseTitleView() {
+    }
+
+    protected void onSetupTitleView() {
+    }
+
+    @Override
+    protected void onErrorStateChanged() {
+        if (mTitleView != null) {
+            mTitleView.setErrorState(hasErrorState());
+        }
     }
 
     public void setTextError(CharSequence cs) {
@@ -167,7 +214,7 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     }
 
     public void showError() {
-        if (!mError) {
+        if (!hasErrorState()) {
             View ownerView = getOwnerView();
             if (ownerView != null) {
                 overrideOwnerViewColors();
@@ -175,7 +222,7 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
 
             setTextColor(getColorError());
 
-            mError = true;
+            setErrorState(true);
         }
 
         setText(getTextError());
@@ -184,12 +231,12 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     }
 
     public void showDefault() {
-        if (mError) {
+        if (hasErrorState()) {
             restoreOwnerViewColors();
 
             setTextColor(getColorDefault());
 
-            mError = false;
+            setErrorState(false);
         }
 
         setText(getTextDefault());
@@ -201,7 +248,7 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     protected void onHide() {
         restoreOwnerViewColors();
 
-        mError = false;
+        setErrorState(false);
     }
 
     @Override
@@ -209,44 +256,46 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
         restoreOwnerViewColors();
     }
 
+    @Override
     protected void onColorErrorChanged() {
+        super.onColorErrorChanged();
+
         mProcessedBackgroundError = null;
-        if (mError) {
+        if (hasErrorState()) {
             overrideOwnerViewColors();
-            setTextColor(mColorError);
         }
     }
 
     @Override
     protected void onColorDefaultChanged() {
-        if (!mError) {
+        if (!hasErrorState()) {
             setTextColor(getColorDefault());
         }
     }
 
     protected void onTextErrorChanged() {
-        if (mError) {
+        if (hasErrorState()) {
             setText(getTextError());
         }
     }
 
     @Override
     protected void onTextDefaultChanged() {
-        if (!mError) {
+        if (!hasErrorState()) {
             setText(getTextDefault());
         }
     }
 
     protected void onBackgroundErrorChanged() {
         mProcessedBackgroundError = null;
-        if (mError) {
+        if (hasErrorState()) {
             overrideOwnerViewColors();
         }
     }
 
     protected void onUseColorErrorChanged() {
         mProcessedBackgroundError = null;
-        if (mError) {
+        if (hasErrorState()) {
             overrideOwnerViewColors();
         }
     }
@@ -283,9 +332,10 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
                 d = mBackgroundOriginal;
             }
             if (d != null && useColorError) {
-                d = d.getConstantState().newDrawable();
-                d = DrawableCompat.wrap(d);
-                DrawableCompat.setTint(d, getColorError());
+//                d = d.getConstantState().newDrawable();
+//                d = DrawableCompat.wrap(d);
+//                DrawableCompat.setTint(d, getColorError());
+                d = Utils.colorizeDrawable(d, getColorError());
             }
             mProcessedBackgroundError = d;
         }
@@ -296,7 +346,7 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     protected void onOwnerViewTextChanged(int oldLen, CharSequence s) {
         int trigger = getTrigger();
 
-        if (mError) {
+        if (hasErrorState()) {
             // clear error
             if (trigger == Trigger.TEXT) {
                 if (!TextUtils.isEmpty(s)) {
@@ -329,11 +379,11 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
         if (getTrigger() != Trigger.FOCUS) return;
 
         if (focused) {
-            if (!mError) {
+            if (!hasErrorState()) {
                 showDefault();
             }
         } else {
-            if (!mError) {
+            if (!hasErrorState()) {
                 hide();
             }
         }

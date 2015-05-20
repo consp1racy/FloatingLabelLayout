@@ -22,6 +22,16 @@ public class FloatingLabelView extends AbstractFloatingLabelView {
     private CharSequence mOriginalHint;
     private int mColorActivated;
 
+    @Override
+    protected int getDefaultStyleAttr() {
+        return R.attr.floatingLabelViewStyle;
+    }
+
+    @Override
+    protected int getDefaultStyleRes() {
+        return R.style.Widget_FloatingLabelView;
+    }
+
     public FloatingLabelView(Context context) {
         super(context);
         init(context, null, R.attr.floatingLabelViewStyle, R.style.Widget_FloatingLabelView);
@@ -93,13 +103,15 @@ public class FloatingLabelView extends AbstractFloatingLabelView {
 
     @Override
     protected void onOwnerViewFocusChanged(boolean focused) {
-        if (getTrigger() != Trigger.FOCUS) return;
-
-        if (focused) {
+        if (hasErrorState()) {
+            setTextColor(getColorError());
+        } else if (focused) {
             setTextColorSmooth(getColorActivated());
         } else {
             setTextColorSmooth(getColorDefault());
         }
+
+        if (getTrigger() != Trigger.FOCUS) return;
 
         TextView tv = getTextView();
         if (focused) {
@@ -138,19 +150,8 @@ public class FloatingLabelView extends AbstractFloatingLabelView {
         }
     }
 
-    @Override
-    protected void onColorDefaultChanged() {
-        View v = getOwnerView();
-        if (v == null || !v.isFocused()) {
-            setTextColor(getColorDefault());
-        }
-    }
-
     protected void onColorActivatedChanged() {
-        View v = getOwnerView();
-        if (v != null && v.isFocused()) {
-            setTextColor(mColorActivated);
-        }
+        setTextColor(getPreferredTextColor());
     }
 
     public void setColorActivated(int color) {
@@ -162,5 +163,15 @@ public class FloatingLabelView extends AbstractFloatingLabelView {
 
     public int getColorActivated() {
         return mColorActivated;
+    }
+
+    @Override
+    int getPreferredTextColor() {
+        View v = getOwnerView();
+        if (v != null && v.isFocused()) {
+            return getColorActivated();
+        } else {
+            return getColorDefault();
+        }
     }
 }

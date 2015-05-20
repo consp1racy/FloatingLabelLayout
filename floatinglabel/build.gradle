@@ -34,7 +34,7 @@ dependencies {
 ext {
     PUBLISH_GROUP_ID = 'net.xpece.material'
     PUBLISH_ARTIFACT_ID = 'floating-label'
-    PUBLISH_VERSION = '0.2.3'
+    PUBLISH_VERSION = '0.3.0'
 }
 
 apply from: '../android-release-aar.gradle'

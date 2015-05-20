@@ -5,14 +5,25 @@ Floating Label according to Material Design spec.
 Contains floating label, floating helper/error and floating character counter widgets
 for use mainly with `EditText` but capable of handling any other view.
 
+Intended behavior is best described here:
+http://www.google.com/design/spec/components/text-fields.html#text-fields-character-counter
+
 The library is now available from API 4.
+
+*Provided widgets may be placed anywhere in your layout and are bound to their owner views by ID.
+This is a major difference from other libraries I've found which forced implicitly forced you
+to use `LinearLayout`s or prescribed IDs.*
+
+## Screenshots
+
+![FloatingLabelView Showcase](./docs/device-2015-05-20-120951.png)
 
 ## How to get the library?
 
 To use this library add the following to your module's `build.gradle`:
 ```groovy
 dependencies {
-    compile 'net.xpece.material:floating-label:0.2.1'
+    compile 'net.xpece.material:floating-label:0.3.0'
 }
 ```
 
@@ -22,45 +33,51 @@ The library depends on NineOldAndroids.
 
 Your "input unit" layout may look like this (using `appcompat-v7` library):
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+```xml
+    <LinearLayout
+        android:orientation="vertical"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-            <net.xpece.material.floatinglabel.FloatingLabelView
-                android:paddingLeft="@dimen/abc_control_inset_material"
-                android:paddingRight="@dimen/abc_control_inset_material"
-                app:flv_textDefault="Password"
-                app:flv_ownerView="@+id/et_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <net.xpece.material.floatinglabel.FloatingLabelView
+            android:id="@+id/title_password"
+            android:paddingLeft="@dimen/abc_control_inset_material"
+            android:paddingRight="@dimen/abc_control_inset_material"
+            app:flv_textDefault="Password"
+            app:flv_ownerView="@+id/et_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-            <EditText
-                android:id="@+id/et_password"
-                android:inputType="textPassword"
-                android:hint="Password"
-                android:minEms="10"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/et_password"
+            android:inputType="textPassword"
+            android:hint="Password"
+            android:minEms="10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-            <net.xpece.material.floatinglabel.FloatingHelperView
-                android:id="@+id/helper_password"
-                android:paddingLeft="@dimen/abc_control_inset_material"
-                android:paddingRight="@dimen/abc_control_inset_material"
-                app:flv_textDefault="Enter your password"
-                app:flv_textError="The password is wrong. Try again."
-                app:flv_ownerView="@id/et_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
+        <net.xpece.material.floatinglabel.FloatingHelperView
+            android:id="@+id/helper_password"
+            android:paddingLeft="@dimen/abc_control_inset_material"
+            android:paddingRight="@dimen/abc_control_inset_material"
+            app:flv_textDefault="Enter your password"
+            app:flv_textError="The password is wrong. Try again."
+            app:flv_ownerView="@id/et_password"
+            app:flv_titleView="@id/title_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+```
 
 ## Customization
 
-All floating labels extend `TextView` so all its attributes are applicable as well.
+All floating labels extend `TextView` so all its attributes are applicable as well. Exceptions:
+- Visibility
+- Text color
 
 All custom attributes may be accessed via getters and setters.
 
@@ -98,6 +115,11 @@ Owner view position determines where the owner view lies in relation to the labe
 Valid values are `top`, `left`, `right` and `bottom`.
 These are used when animating showing and hiding of the label.
 
+    <item name="flv_colorError">@color/flv_error</item>
+
+Error color determines text color when the label is in error state.
+Optionally it may color the owner view background (managed by helper or counter).
+
 ### FloatingLabelView
 
 The `FloatingLabelView` can be customized using the following attributes:
@@ -113,11 +135,6 @@ Floating helper may or may not be displayed typically below the owner view.
 It has an optional error state which is always triggered manually and cleared on text change
 (if applicable).
 
-    <item name="flv_colorError">@color/flv_error</item>
-
-Error color determines text color when the helper is in error state.
-Optionally it may color the owner view background.
-
     <item name="flv_ownerViewBackgroundError">@null</item>
 
 Specifies custom background for owner view when in error state.
@@ -127,6 +144,11 @@ May be colored by error color.
     <item name="flv_ownerViewUseColorError">true</item>
 
 If true the owner view background becomes colored with error color when in error state.
+
+    <item name="flv_titleView">@id/title_text1</item>
+
+The title view attribute allows you to associate this helper with a title `FloatingLabelView`.
+This is used to delegate error state.
 
 ### CharacterCounterView extends FloatingHelperView
 
@@ -162,8 +184,12 @@ The style will look similar to this:
 
 ## Changelog
 
+**0.3.0**
+- *NEW:* Helper/counter may extend error state to a title `FloatingLabelView` associated via `app:flv_titleView` attribute.
+- *FIXED:* View background no longer gets lost.
+
 **0.2.2**
-- Fixed issues with preview
+- *FIXED:* Preview is now working.
 
 **0.2.1**
 - *FIXED:* Correct text and drawable state after OC (orientation change)

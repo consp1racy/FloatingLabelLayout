@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorListenerAdapter;
-import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.nineoldandroids.view.ViewPropertyAnimator;
 
@@ -30,7 +29,11 @@ import java.lang.annotation.RetentionPolicy;
  */
 abstract class AbstractFloatingLabelView extends TextView {
 
-    protected static final long ANIMATION_DURATION = 150; //short
+    protected static final long ANIMATION_DURATION = 100; //veeery short
+
+    private int mColorError;
+
+    private boolean mError;
 
     private int mOwnerViewId;
     private View mOwnerView;
@@ -75,28 +78,23 @@ abstract class AbstractFloatingLabelView extends TextView {
         public void afterTextChanged(Editable s) {}
     };
 
-    protected int getDefaultStyle() {
-        return R.attr.floatingLabelViewStyle;
-    }
+    protected abstract int getDefaultStyleAttr();
 
-    protected int getDefaultTheme() {
-        return R.style.Widget_FloatingLabelView;
-    }
+    protected abstract int getDefaultStyleRes();
 
     public AbstractFloatingLabelView(Context context) {
         super(context);
-        init(context, null, getDefaultStyle(), getDefaultTheme());
+        init(context, null, getDefaultStyleAttr(), getDefaultStyleRes());
     }
 
     public AbstractFloatingLabelView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs, getDefaultStyle(), getDefaultTheme());
+        init(context, attrs, getDefaultStyleAttr(), getDefaultStyleRes());
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public AbstractFloatingLabelView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context, attrs, defStyle, getDefaultTheme());
+        init(context, attrs, defStyle, getDefaultStyleRes());
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -127,6 +125,9 @@ abstract class AbstractFloatingLabelView extends TextView {
 
         mColorDefault = a.getColor(R.styleable.FloatingLabelView_flv_colorDefault, 0);
         onColorDefaultChanged();
+
+        mColorError = a.getColor(R.styleable.FloatingLabelView_flv_colorError, 0);
+        onColorErrorChanged();
 
         a.recycle();
 
@@ -178,6 +179,23 @@ abstract class AbstractFloatingLabelView extends TextView {
 
     protected TextView getTextView() {
         return mOwnerView instanceof TextView ? (TextView) mOwnerView : null;
+    }
+
+    public void setColorError(int color) {
+        if (color != mColorError) {
+            mColorError = color;
+            onColorErrorChanged();
+        }
+    }
+
+    public int getColorError() {
+        return mColorError;
+    }
+
+    protected void onColorErrorChanged() {
+        if (mError) {
+            setTextColor(mColorError);
+        }
     }
 
     public void setTextDefault(CharSequence cs) {
@@ -347,58 +365,41 @@ abstract class AbstractFloatingLabelView extends TextView {
     }
 
     protected void onColorDefaultChanged() {
-        setTextColor(getColorDefault());
+        setTextColor(getPreferredTextColor());
     }
 
     protected void onHide() {}
 
+    protected void setErrorState(boolean error) {
+        if (mError != error) {
+            mError = error;
+
+            if (mError) {
+                setTextColor(getColorError());
+            } else {
+                setTextColor(getPreferredTextColor());
+            }
+
+            onErrorStateChanged();
+        }
+    }
+
+    protected boolean hasErrorState() {
+        return mError;
+    }
+
+    protected void onErrorStateChanged() {}
+
+    int getPreferredTextColor() {
+        return getColorDefault();
+    }
+
     /**
-     * @param target
-     * http://stackoverflow.com/questions/18216285/android-animate-color-change-from-color-to-color
+     * @param target http://stackoverflow.com/questions/18216285/android-animate-color-change-from-color-to-color
      */
     protected final void setTextColorSmooth(final int target) {
-        if (getVisibility() != VISIBLE) {
-            setTextColor(target);
-            return;
-        }
-
         final int source = getCurrentTextColor();
-
-        // Unsuitable for transforming greyscale to non red colors. Hue for black is red.
-//        final float[] from = new float[3];
-//        final float[] to = new float[3];
-//        final int alphaSource = Color.alpha(source);
-//        final int alphaTarget = Color.alpha(target);
-//
-//        Color.colorToHSV(source, from);
-//        Color.colorToHSV(target, to);
-//        final int alphaDiff = alphaTarget - alphaSource;
-//
-//        final float[] hsv = new float[3];
-//        ValueAnimator anim = ValueAnimator.ofFloat(0, 1).setDuration(ANIMATION_DURATION);
-//        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//            @Override
-//            public void onAnimationUpdate(ValueAnimator animation) {
-//                // Transition along each axis of HSV (hue, saturation, value)
-//                hsv[0] = from[0] + (to[0] - from[0]) * animation.getAnimatedFraction();
-//                hsv[1] = from[1] + (to[1] - from[1]) * animation.getAnimatedFraction();
-//                hsv[2] = from[2] + (to[2] - from[2]) * animation.getAnimatedFraction();
-////                setTextColor(Color.HSVToColor(hsv));
-//                final int alpha = alphaSource + (int) (alphaDiff * animation.getAnimatedFraction());
-//                setTextColor(Color.HSVToColor(hsv) & ((alpha << 24) | 0xffffff));
-//            }
-//        });
-
-        ValueAnimator anim = ValueAnimator.ofFloat(0, 1);
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int color = Utils.blendColorsWithAlpha(source, target, animation.getAnimatedFraction());
-                setTextColor(color);
-            }
-        });
-
-        anim.start();
+        Utils.setTextColorSmooth(this, source, target);
     }
 
     @Retention(RetentionPolicy.SOURCE)
