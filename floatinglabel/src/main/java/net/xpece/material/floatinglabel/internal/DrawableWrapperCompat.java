@@ -7,7 +7,11 @@ import java.lang.reflect.Field;
 
 /**
  * Created by Eugen on 8. 3. 2015.
+ *
+ * @deprecated Since support-v4 library introduced drawable wrapping and since appcompat-v7 now
+ * actually uses it this class is no longer necessary.
  */
+@Deprecated
 public class DrawableWrapperCompat {
     private static final String TAG = DrawableWrapperCompat.class.getSimpleName();
 

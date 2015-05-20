@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
-import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -184,7 +183,7 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
     }
 
     public void setBackgroundError(@DrawableRes int resId) {
-        mBackgroundError = ContextCompat.getDrawable(getContext(), resId);
+        mBackgroundError = Utils.getDrawable(getContext(), resId);
         onBackgroundErrorChanged();
     }
 
@@ -225,7 +224,11 @@ public class FloatingHelperView extends AbstractFloatingLabelView {
             setErrorState(true);
         }
 
-        setText(getTextError());
+        if (TextUtils.isEmpty(getTextError())) {
+            setText(getTextDefault());
+        } else {
+            setText(getTextError());
+        }
 
         show();
     }

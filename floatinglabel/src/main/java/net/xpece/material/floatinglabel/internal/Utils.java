@@ -1,6 +1,7 @@
 package net.xpece.material.floatinglabel.internal;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -8,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
+import android.support.annotation.DrawableRes;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -21,6 +23,16 @@ public class Utils {
     private static final String TAG = Utils.class.getName();
 
     private Utils() {}
+
+    @TargetApi(21)
+    @SuppressWarnings("deprecation")
+    public static Drawable getDrawable(Context context, @DrawableRes int resId) {
+        if (Build.VERSION.SDK_INT >= 21) {
+            return context.getDrawable(resId);
+        } else {
+            return context.getResources().getDrawable(resId);
+        }
+    }
 
     @TargetApi(16)
     @SuppressWarnings("deprecation")
