@@ -1,3 +1,9 @@
+
+# DEPRECATED
+There will (probably) be no more active development of this library. See `TextInputLayout` which is available as part of the Android Design Support library. This widget should be sufficient for most of your needs.
+
+http://developer.android.com/reference/android/support/design/widget/TextInputLayout.html
+
 # Material Floating Label
 
 <img src="./sample/src/main/res/mipmap-xxhdpi/ic_launcher.png" align="right" style="margin-left: 1em;"/>
